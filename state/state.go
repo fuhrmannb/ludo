@@ -7,6 +7,7 @@ import (
 
 	"github.com/libretro/ludo/libretro"
 	"github.com/libretro/ludo/rdb"
+	"github.com/libretro/ludo/speedrun"
 )
 
 // State is a type for the global state of the app
@@ -20,6 +21,8 @@ type State struct {
 	DB          rdb.DB         // The game database loaded on startup
 	LudOS       bool           // Run Ludo as a unix desktop environment
 	FastForward bool           // Run the core as fast as possible
+
+	SpeedrunSession speedrun.Session
 
 	sync.Mutex
 }

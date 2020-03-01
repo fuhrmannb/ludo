@@ -52,6 +52,7 @@ func runLoop(vid *video.Video, m *menu.Menu) {
 			m.Render(dt)
 		}
 		m.RenderNotifications()
+		m.RenderSpeedrunOverlay()
 		if state.Global.FastForward {
 			glfw.SwapInterval(0)
 		} else {
@@ -122,6 +123,9 @@ func main() {
 
 	// No game running? display the menu
 	state.Global.MenuActive = !state.Global.CoreRunning
+
+	// TODO: Test speedrun (to remove)
+	state.Global.SpeedrunSession.Stopwatch.Start()
 
 	runLoop(vid, m)
 
