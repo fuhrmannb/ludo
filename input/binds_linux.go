@@ -2,6 +2,8 @@ package input
 
 import "github.com/libretro/ludo/libretro"
 
+var speedpadName = "DragonRise Inc.   Generic   USB  Joystick  "
+
 var joyBinds = map[string]joybinds{
 	"Microsoft X-Box 360 pad":                            xbox360JoyBinds,
 	"Microsoft X-Box One S pad":                          xboxOneJoyBinds,
@@ -12,6 +14,7 @@ var joyBinds = map[string]joybinds{
 	"8Bitdo NES30 Pro   8Bitdo NES30 Pro":                nes30proJoyBinds,
 	"SFC30              SFC30 Joystick":                  sfc30JoyBinds,
 	"SNES30             SNES30 Joy    ":                  sfc30JoyBinds,
+	speedpadName:                                         speedrunJoyBinds,
 }
 
 // Joypad bindings fox Xbox360 pad on Linux
@@ -132,4 +135,10 @@ var sfc30JoyBinds = joybinds{
 	bind{axis, 1, -1, -0.5}: libretro.DeviceIDJoypadUp,
 	bind{axis, 0, 1, 0.5}:   libretro.DeviceIDJoypadRight,
 	bind{axis, 1, 1, 0.5}:   libretro.DeviceIDJoypadDown,
+}
+
+// Joypad bindings fox the Speedrun pad on Linux
+// Based on DragonRise Inc. Generic USB Joystick
+var speedrunJoyBinds = joybinds{
+	bind{btn, 0, 0, 0}: ActionSpeedrunSplit,
 }

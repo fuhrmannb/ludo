@@ -45,8 +45,11 @@ const (
 	ActionShouldClose uint32 = libretro.DeviceIDJoypadR3 + 3
 	// ActionFastForwardToggle will run the core as fast as possible
 	ActionFastForwardToggle uint32 = libretro.DeviceIDJoypadR3 + 4
+	// ActionSpeedrunSplit is used to split stopwatch on speedrun attempts
+	// Only bind with the SplitButton
+	ActionSpeedrunSplit uint32 = libretro.DeviceIDJoypadR3 + 5
 	// ActionLast is used for iterating
-	ActionLast uint32 = libretro.DeviceIDJoypadR3 + 5
+	ActionLast uint32 = libretro.DeviceIDJoypadR3 + 6
 )
 
 // joystickCallback is triggered when a joypad is plugged.
@@ -85,23 +88,36 @@ func reset(state inputstate) inputstate {
 
 // pollJoypads process joypads of all players
 func pollJoypads(state inputstate) inputstate {
+	var ignored int
 	for p := range state {
 		buttonState := glfw.Joystick.GetButtons(glfw.Joystick(p))
 		axisState := glfw.Joystick.GetAxes(glfw.Joystick(p))
 		name := glfw.Joystick.GetName(glfw.Joystick(p))
 		jb := joyBinds[name]
+
+		// Particular case for SpeedLearn fork
+		// SpeedButton Joypad is considered as player 0 input
+		// Moreover we ignored the controller as playable joypad
+		var joyIndex int
+		if name == speedpadName {
+			ignored++
+			joyIndex = 0
+		} else {
+			joyIndex = p - ignored
+		}
+
 		if len(buttonState) > 0 {
 			for k, v := range jb {
 				switch k.kind {
 				case btn:
 					if int(k.index) < len(buttonState) &&
 						glfw.Action(buttonState[k.index]) == glfw.Press {
-						state[p][v] = true
+						state[joyIndex][v] = true
 					}
 				case axis:
 					if int(k.index) < len(axisState) &&
 						k.direction*axisState[k.index] > k.threshold*k.direction {
-						state[p][v] = true
+						state[joyIndex][v] = true
 					}
 				}
 			}

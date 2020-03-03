@@ -196,4 +196,9 @@ func (m *Menu) ProcessHotkeys() {
 			vid.Window.SetShouldClose(true)
 		})
 	}
+
+	// Toggle the menu if ActionMenuToggle is pressed
+	if input.Pressed[0][input.ActionSpeedrunSplit] {
+		state.Global.SpeedrunSession.Stopwatch.Pause()
+	}
 }
