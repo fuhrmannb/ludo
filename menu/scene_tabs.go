@@ -28,6 +28,15 @@ func buildTabs() Scene {
 	list.label = "Ludo"
 
 	list.children = append(list.children, entry{
+		label:    "SpeedLearn",
+		subLabel: "Learn how to speedrun!",
+		icon:     "speedrun",
+		callbackOK: func() {
+			menu.Push(buildSLMainMenu())
+		},
+	})
+
+	list.children = append(list.children, entry{
 		label:    "Main Menu",
 		subLabel: "Load cores and games manually",
 		icon:     "main",
