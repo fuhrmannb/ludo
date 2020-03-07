@@ -1,15 +1,14 @@
 package menu
 
 import (
+	"github.com/libretro/ludo/notifications"
+	"github.com/libretro/ludo/settings"
+	"github.com/libretro/ludo/speedrun"
 	"github.com/libretro/ludo/state"
 )
 
-type sceneSLMain struct {
-	entry
-}
-
 func buildSLMainMenu() Scene {
-	var list sceneSLMain
+	var list sceneMain
 	list.label = "SpeedLearn Main Menu"
 
 	// Speedrun start is available when:
@@ -21,8 +20,20 @@ func buildSLMainMenu() Scene {
 		stringValue: func() string { return state.Global.SpeedrunSession.Player },
 		icon:        "run",
 		callbackOK: func() {
+			cfg, err := speedrun.LoadCfg(settings.Current.SpeedrunDirectory)
+			if err != nil {
+				notifications.DisplayAndLog(notifications.Error, speedrun.NotificationPrefix, "%v", err)
+				return
+			}
+
+			sc, err := buildSLGameMenu(cfg)
+			if err != nil {
+				notifications.DisplayAndLog(notifications.Error, speedrun.NotificationPrefix, "%v", err)
+				return
+			}
+
 			list.segueNext()
-			menu.Push(buildSLGameMenu())
+			menu.Push(sc)
 		},
 	}
 	prependStart := func() {
@@ -64,32 +75,4 @@ func buildSLMainMenu() Scene {
 	list.segueMount()
 
 	return &list
-}
-
-func (s *sceneSLMain) Entry() *entry {
-	return &s.entry
-}
-
-func (s *sceneSLMain) segueMount() {
-	genericSegueMount(&s.entry)
-}
-
-func (s *sceneSLMain) segueNext() {
-	genericSegueNext(&s.entry)
-}
-
-func (s *sceneSLMain) segueBack() {
-	genericAnimate(&s.entry)
-}
-
-func (s *sceneSLMain) update(dt float32) {
-	genericInput(&s.entry, dt)
-}
-
-func (s *sceneSLMain) render() {
-	genericRender(&s.entry)
-}
-
-func (s *sceneSLMain) drawHintBar() {
-	genericDrawHintBar()
 }

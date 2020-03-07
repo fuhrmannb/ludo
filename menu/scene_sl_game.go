@@ -1,44 +1,35 @@
 package menu
 
-type sceneSLGame struct {
-	entry
-}
+import (
+	"github.com/libretro/ludo/speedrun"
+	"github.com/libretro/ludo/state"
+	"github.com/libretro/ludo/utils"
+)
 
-func buildSLGameMenu() Scene {
-	var list sceneSLGame
-	list.label = "Speedrun game"
+func buildSLGameMenu(cfg []speedrun.GameCfg) (Scene, error) {
+	var list scenePlaylist
+	list.label = "Speedrun Games Menu"
 
-	//TODO: game menu
+	for _, c := range cfg {
+		game, err := c.RomInfo(state.Global.DB)
+		if err != nil {
+			return nil, err
+		}
+		strippedName, tags := extractTags(game.Name)
+		list.children = append(list.children, entry{
+			label:    strippedName,
+			gameName: game.Name,
+			path:     game.Path,
+			system:   game.System,
+			tags:     tags,
+			icon:     utils.FileName(c.RomPath()) + "-content",
+			callbackOK: func() {
+				// TODO:
+			},
+		})
+	}
 
 	list.segueMount()
 
-	return &list
-}
-
-func (s *sceneSLGame) Entry() *entry {
-	return &s.entry
-}
-
-func (s *sceneSLGame) segueMount() {
-	genericSegueMount(&s.entry)
-}
-
-func (s *sceneSLGame) segueNext() {
-	genericSegueNext(&s.entry)
-}
-
-func (s *sceneSLGame) segueBack() {
-	genericAnimate(&s.entry)
-}
-
-func (s *sceneSLGame) update(dt float32) {
-	genericInput(&s.entry, dt)
-}
-
-func (s *sceneSLGame) render() {
-	genericRender(&s.entry)
-}
-
-func (s *sceneSLGame) drawHintBar() {
-	genericDrawHintBar()
+	return &list, nil
 }
