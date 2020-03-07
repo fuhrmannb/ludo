@@ -78,6 +78,7 @@ func defaultSettings() Settings {
 		SavestatesDirectory:  filepath.Join(home, ".ludo", "savestates"),
 		SavefilesDirectory:   filepath.Join(home, ".ludo", "savefiles"),
 		ScreenshotsDirectory: filepath.Join(home, ".ludo", "screenshots"),
+		SpeedrunDirectory:    filepath.Join(home, ".ludo", "speedrun"),
 		SystemDirectory:      filepath.Join(home, ".ludo", "system"),
 		PlaylistsDirectory:   filepath.Join(home, ".ludo", "playlists"),
 		ThumbnailsDirectory:  filepath.Join(home, ".ludo", "thumbnails"),

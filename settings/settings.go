@@ -36,6 +36,7 @@ type Settings struct {
 	SavestatesDirectory  string `hide:"ludos" toml:"savestates_dir" label:"Savestates Directory" fmt:"%s" widget:"dir"`
 	SavefilesDirectory   string `hide:"ludos" toml:"savefiles_dir" label:"Savefiles Directory" fmt:"%s" widget:"dir"`
 	ScreenshotsDirectory string `hide:"ludos" toml:"screenshots_dir" label:"Screenshots Directory" fmt:"%s" widget:"dir"`
+	SpeedrunDirectory    string `hide:"ludos" toml:"speedrun_dir" label:"Speedrun Directory" fmt:"%s" widget:"dir"`
 	SystemDirectory      string `hide:"ludos" toml:"system_dir" label:"System Directory" fmt:"%s" widget:"dir"`
 	PlaylistsDirectory   string `hide:"ludos" toml:"playlists_dir" label:"Playlists Directory" fmt:"%s" widget:"dir"`
 	ThumbnailsDirectory  string `hide:"ludos" toml:"thumbnail_dir" label:"Thumbnails Directory" fmt:"%s" widget:"dir"`
