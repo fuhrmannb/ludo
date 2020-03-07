@@ -33,6 +33,7 @@ func buildPlaylist(path string) Scene {
 			path:       game.Path,
 			tags:       tags,
 			icon:       utils.FileName(path) + "-content",
+			system:     utils.FileName(path),
 			callbackOK: func() { loadPlaylistEntry(&list, list.label, game) },
 		})
 	}
@@ -164,7 +165,7 @@ func (s *scenePlaylist) render() {
 		if e.labelAlpha > 0 {
 			drawThumbnail(
 				list, i,
-				list.label, e.gameName,
+				e.system, e.gameName,
 				680*menu.ratio-85*e.scale*menu.ratio,
 				float32(h)*e.yp-14*menu.ratio-64*e.scale*menu.ratio+fontOffset,
 				170*menu.ratio, 128*menu.ratio,
