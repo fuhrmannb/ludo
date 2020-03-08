@@ -124,9 +124,6 @@ func main() {
 	// No game running? display the menu
 	state.Global.MenuActive = !state.Global.CoreRunning
 
-	// TODO: Test speedrun (to remove)
-	state.Global.SpeedrunSession.Stopwatch.Start()
-
 	runLoop(vid, m)
 
 	// Unload and deinit in the core.

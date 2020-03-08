@@ -20,7 +20,7 @@ func buildSLMainMenu() Scene {
 		stringValue: func() string { return state.Global.SpeedrunSession.Player },
 		icon:        "run",
 		callbackOK: func() {
-			cfg, err := speedrun.LoadCfg(settings.Current.SpeedrunDirectory)
+			cfg, err := speedrun.LoadCfg(settings.Current.SpeedrunDirectory, state.Global.DB)
 			if err != nil {
 				notifications.DisplayAndLog(notifications.Error, speedrun.NotificationPrefix, "%v", err)
 				return
@@ -76,3 +76,5 @@ func buildSLMainMenu() Scene {
 
 	return &list
 }
+
+// TODO: improve SL speedrun render (show description, start/end split, trophies...)

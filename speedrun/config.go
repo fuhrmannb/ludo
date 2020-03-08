@@ -18,8 +18,9 @@ var NotificationPrefix = "Speedrun"
 type GameCfg struct {
 	Rom       string        `yaml:"rom"`
 	Speedruns []SpeedrunCfg `yaml:"speedruns"`
+	RomInfo   rdb.Game      `yaml:-`
 
-	speedrunDir string
+	speedrunDir string `yaml:-`
 }
 
 // SpeedrunCfg contains a speedrun setup configuration for a specific game
@@ -31,6 +32,8 @@ type SpeedrunCfg struct {
 	EndSplit    string    `yaml:"end_split"`
 	Difficulty  int       `yaml:"difficulty"`
 	Trophies    TrophyCfg `yaml:"trophies"`
+
+	speedrunDir string `yaml:-`
 }
 
 // TrophyCfg contains the list of trophies time for a speedrun
@@ -43,7 +46,7 @@ type TrophyCfg struct {
 }
 
 // LoadCfg load the speedrun config from the Speedrun directory
-func LoadCfg(speedrunDir string) ([]GameCfg, error) {
+func LoadCfg(speedrunDir string, db rdb.DB) ([]GameCfg, error) {
 
 	tomlFiles, err := filepath.Glob(fmt.Sprintf("%s/*.yaml", speedrunDir))
 	if err != nil {
@@ -58,19 +61,28 @@ func LoadCfg(speedrunDir string) ([]GameCfg, error) {
 			return nil, fmt.Errorf("cannot open speedrun YAML file %v: %v", tf, err)
 		}
 		var cfg GameCfg
-		cfg.speedrunDir = speedrunDir
 		err = yaml.Unmarshal(b, &cfg)
 		if err != nil {
 			return nil, fmt.Errorf("cannot unmarshal speedrun YAML file %v: %v", tf, err)
 		}
+
+		cfg.speedrunDir = speedrunDir
+		for i := range cfg.Speedruns {
+			cfg.Speedruns[i].speedrunDir = speedrunDir
+		}
+
+		cfg.RomInfo, err = romInfo(cfg, db)
+		if err != nil {
+			return nil, fmt.Errorf("cannot get rom info from %v: %v", tf, err)
+		}
+
 		games = append(games, cfg)
 	}
 
 	return games, nil
 }
 
-// RomInfo returns game information comparing RDB database
-func (cfg *GameCfg) RomInfo(db rdb.DB) (rdb.Game, error) {
+func romInfo(cfg GameCfg, db rdb.DB) (rdb.Game, error) {
 	games := make(chan (rdb.Game))
 
 	// Load game from cfg
@@ -102,6 +114,11 @@ func (cfg *GameCfg) RomInfo(db rdb.DB) (rdb.Game, error) {
 }
 
 // RomPath returns the absolute rom file path
-func (cfg *GameCfg) RomPath() string {
-	return filepath.Join(cfg.speedrunDir, cfg.Rom)
+func (gc *GameCfg) RomPath() string {
+	return filepath.Join(gc.speedrunDir, gc.Rom)
+}
+
+// SavestatePath returns the absolute stavestate path
+func (sc *SpeedrunCfg) SavestatePath() string {
+	return filepath.Join(sc.speedrunDir, sc.Savestate)
 }
