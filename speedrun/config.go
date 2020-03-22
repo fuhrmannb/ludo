@@ -50,7 +50,7 @@ func LoadCfg(speedrunDir string, db rdb.DB) ([]GameCfg, error) {
 
 	tomlFiles, err := filepath.Glob(fmt.Sprintf("%s/*.yaml", speedrunDir))
 	if err != nil {
-		return nil, fmt.Errorf("cannot find speedrun YAML files: %v", err)
+		return nil, fmt.Errorf("cannot find speedrun YAML files: %w", err)
 	}
 
 	var games []GameCfg
@@ -58,12 +58,12 @@ func LoadCfg(speedrunDir string, db rdb.DB) ([]GameCfg, error) {
 	for _, tf := range tomlFiles {
 		b, err := ioutil.ReadFile(tf)
 		if err != nil {
-			return nil, fmt.Errorf("cannot open speedrun YAML file %v: %v", tf, err)
+			return nil, fmt.Errorf("cannot open speedrun YAML file %v: %w", tf, err)
 		}
 		var cfg GameCfg
 		err = yaml.Unmarshal(b, &cfg)
 		if err != nil {
-			return nil, fmt.Errorf("cannot unmarshal speedrun YAML file %v: %v", tf, err)
+			return nil, fmt.Errorf("cannot unmarshal speedrun YAML file %v: %w", tf, err)
 		}
 
 		cfg.speedrunDir = speedrunDir
@@ -73,7 +73,7 @@ func LoadCfg(speedrunDir string, db rdb.DB) ([]GameCfg, error) {
 
 		cfg.RomInfo, err = romInfo(cfg, db)
 		if err != nil {
-			return nil, fmt.Errorf("cannot get rom info from %v: %v", tf, err)
+			return nil, fmt.Errorf("cannot get rom info from %v: %w", tf, err)
 		}
 
 		games = append(games, cfg)
@@ -89,7 +89,7 @@ func romInfo(cfg GameCfg, db rdb.DB) (rdb.Game, error) {
 	romPath := cfg.RomPath()
 	bytes, err := ioutil.ReadFile(romPath)
 	if err != nil {
-		return rdb.Game{}, fmt.Errorf("cannot load speedrun ROM file %v: %v", cfg.Rom, err)
+		return rdb.Game{}, fmt.Errorf("cannot load speedrun ROM file %v: %w", cfg.Rom, err)
 	}
 
 	// Find game in database
