@@ -16,15 +16,17 @@ var NotificationPrefix = "Speedrun"
 
 // GameCfg is the game configuration containing all speedrun information
 type GameCfg struct {
-	Rom       string        `yaml:"rom"`
-	Speedruns []SpeedrunCfg `yaml:"speedruns"`
-	RomInfo   rdb.Game      `yaml:-`
+	ID         string        `yaml:id`
+	Rom        string        `yaml:"rom"`
+	Categories []CategoryCfg `yaml:"categories"`
+	RomInfo    rdb.Game      `yaml:-`
 
 	speedrunDir string `yaml:-`
 }
 
-// SpeedrunCfg contains a speedrun setup configuration for a specific game
-type SpeedrunCfg struct {
+// CategoryCfg contains a speedrun setup configuration for a specific game
+type CategoryCfg struct {
+	ID          string    `yaml:id`
 	Name        string    `yaml:"name"`
 	Savestate   string    `yaml:"savestate"`
 	Description string    `yaml:"description"`
@@ -67,8 +69,8 @@ func LoadCfg(speedrunDir string, db rdb.DB) ([]GameCfg, error) {
 		}
 
 		cfg.speedrunDir = speedrunDir
-		for i := range cfg.Speedruns {
-			cfg.Speedruns[i].speedrunDir = speedrunDir
+		for i := range cfg.Categories {
+			cfg.Categories[i].speedrunDir = speedrunDir
 		}
 
 		cfg.RomInfo, err = romInfo(cfg, db)
@@ -119,6 +121,6 @@ func (gc *GameCfg) RomPath() string {
 }
 
 // SavestatePath returns the absolute stavestate path
-func (sc *SpeedrunCfg) SavestatePath() string {
+func (sc *CategoryCfg) SavestatePath() string {
 	return filepath.Join(sc.speedrunDir, sc.Savestate)
 }

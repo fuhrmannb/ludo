@@ -16,6 +16,7 @@ import (
 	"github.com/libretro/ludo/playlists"
 	"github.com/libretro/ludo/scanner"
 	"github.com/libretro/ludo/settings"
+	"github.com/libretro/ludo/speedrun"
 	"github.com/libretro/ludo/state"
 	"github.com/libretro/ludo/video"
 )
@@ -121,10 +122,22 @@ func main() {
 		}
 	}
 
+	// Setup Speedrun session
+	cloudDB, err := speedrun.NewCloudDB(settings.Current.SpeedrunDirectory)
+	if err != nil {
+		ntf.DisplayAndLog(ntf.Error, speedrun.NotificationPrefix, err.Error())
+	}
+	state.Global.SpeedrunSession = &speedrun.Session{
+		CloudDB: cloudDB,
+	}
+
 	// No game running? display the menu
 	state.Global.MenuActive = !state.Global.CoreRunning
 
 	runLoop(vid, m)
+
+	// Teardown Speedrun session
+	state.Global.SpeedrunSession.CloudDB.Close()
 
 	// Unload and deinit in the core.
 	core.Unload()

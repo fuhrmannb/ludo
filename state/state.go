@@ -22,7 +22,7 @@ type State struct {
 	LudOS       bool           // Run Ludo as a unix desktop environment
 	FastForward bool           // Run the core as fast as possible
 
-	SpeedrunSession speedrun.Session
+	SpeedrunSession *speedrun.Session
 
 	sync.Mutex
 }

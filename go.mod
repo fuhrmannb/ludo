@@ -3,6 +3,8 @@ module github.com/libretro/ludo
 replace github.com/go-gl/glfw => github.com/kivutar/glfw v0.0.0-20191005084155-f62590c2c41c
 
 require (
+	cloud.google.com/go v0.38.0
+	firebase.google.com/go v3.12.0+incompatible
 	github.com/cavaliercoder/grab v2.0.0+incompatible
 	github.com/disintegration/imaging v1.6.0
 	github.com/fatih/structs v1.1.0
@@ -18,6 +20,7 @@ require (
 	github.com/youpy/go-wav v0.0.0-20160223082350-b63a9887d320
 	golang.org/x/image v0.0.0-20191009234506-e7c1f5e7dbb8 // indirect
 	golang.org/x/mobile v0.0.0-20190607214518-6fa95d984e88
+	google.golang.org/api v0.20.0
 	gopkg.in/yaml.v2 v2.2.8
 )
 

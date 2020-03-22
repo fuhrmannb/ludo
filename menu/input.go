@@ -6,6 +6,7 @@ import (
 	"github.com/libretro/ludo/libretro"
 	ntf "github.com/libretro/ludo/notifications"
 	"github.com/libretro/ludo/settings"
+	"github.com/libretro/ludo/speedrun"
 	"github.com/libretro/ludo/state"
 )
 
@@ -199,6 +200,11 @@ func (m *Menu) ProcessHotkeys() {
 
 	// Toggle the menu if ActionMenuToggle is pressed
 	if input.Pressed[0][input.ActionSpeedrunSplit] {
-		state.Global.SpeedrunSession.Stopwatch.Pause()
+		session := state.Global.SpeedrunSession
+		session.Stopwatch.Stop()
+		session.CloudDB.AddRecord(session.GameCfg.ID, session.CategoryCfg.ID, speedrun.Record{
+			Player:   session.Player,
+			Duration: session.Stopwatch.Elapsed(),
+		})
 	}
 }

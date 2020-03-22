@@ -18,7 +18,7 @@ func buildSLSpeedrunMenu(game speedrun.GameCfg) Scene {
 
 	//	rdbGame := cfg.RomInfo
 
-	for _, sr := range game.Speedruns {
+	for _, sr := range game.Categories {
 		sr := sr
 		list.children = append(list.children, entry{
 			label:    sr.Name,
@@ -35,7 +35,7 @@ func buildSLSpeedrunMenu(game speedrun.GameCfg) Scene {
 	return &list
 }
 
-func loadSpeedrun(scene Scene, game speedrun.GameCfg, sr speedrun.SpeedrunCfg) {
+func loadSpeedrun(scene Scene, game speedrun.GameCfg, cat speedrun.CategoryCfg) {
 	// Load game core
 	if _, err := os.Stat(game.RomPath()); os.IsNotExist(err) {
 		ntf.DisplayAndLog(ntf.Error, speedrun.NotificationPrefix, "Game not found: %s", game.RomPath())
@@ -66,7 +66,7 @@ func loadSpeedrun(scene Scene, game speedrun.GameCfg, sr speedrun.SpeedrunCfg) {
 	}
 
 	// Load savestate
-	err = savestates.Load(sr.SavestatePath())
+	err = savestates.Load(cat.SavestatePath())
 	if err != nil {
 		ntf.DisplayAndLog(ntf.Error, speedrun.NotificationPrefix, err.Error())
 		return
@@ -77,5 +77,8 @@ func loadSpeedrun(scene Scene, game speedrun.GameCfg, sr speedrun.SpeedrunCfg) {
 	menu.tweens.FastForward() // position the elements without animating
 	state.Global.MenuActive = false
 
-	state.Global.SpeedrunSession.Stopwatch.Start()
+	session := state.Global.SpeedrunSession
+	session.Stopwatch.Start()
+	session.GameCfg = game
+	session.CategoryCfg = cat
 }
